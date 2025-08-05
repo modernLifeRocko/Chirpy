@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"sync/atomic"
 )
 
@@ -68,7 +69,7 @@ func handlerValidate (w http.ResponseWriter, r *http.Request){
 	}
 
 	type returnVal struct {
-		Valid bool `json:"valid"`
+		CleanChirp string `json:"cleaned_body"`
 		Errormsg string `json:"error"`
 	}
 	rtnBody := returnVal{}
@@ -76,7 +77,7 @@ func handlerValidate (w http.ResponseWriter, r *http.Request){
 
 	if len(parameters.Body) <= 140 {
 		w.WriteHeader(200)
-		rtnBody.Valid = true
+		rtnBody.CleanChirp = cleanBody(parameters.Body)
 	} else {
 		w.WriteHeader(400)
 		rtnBody.Errormsg = "Chirp is too long"
@@ -90,6 +91,11 @@ func handlerValidate (w http.ResponseWriter, r *http.Request){
 	}
 
 	w.Write(dat)
+}
+
+func cleanBody(s string) string {
+	r, _ := regexp.Compile(`(?i)(\b)(kerfuffle|sharbert|fornax)(\s)`) 
+	return r.ReplaceAllString(s, "$1****$3")
 }
 
 func (cfg *apiConfig) handlerReqCheck (w http.ResponseWriter, r *http.Request){
