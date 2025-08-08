@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 )
 
 func (cfg *apiConfig) middlewareMetricsInc(next http.Handler) http.Handler {
@@ -16,7 +18,13 @@ func (cfg *apiConfig) mwMetricsReset(
 	next func(http.ResponseWriter, *http.Request),
 ) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request){
+		plat := os.Getenv("PLATFORM")
+		if plat != "dev" {
+			log.Fatal("You don't have the permissions to reset the system")
+			return
+		}
 		cfg.fileserverHits.Store(0)
+		cfg.dbQueries.ResetUsers(r.Context())
 		next(w,r)
 	}
 }

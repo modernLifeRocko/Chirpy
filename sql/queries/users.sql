@@ -7,3 +7,7 @@ INSERT INTO users(id, created_at, updated_at, email)
     $1
   )
   RETURNING *;
+
+
+-- name: ResetUsers :exec
+DELETE FROM users;
