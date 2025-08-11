@@ -45,6 +45,7 @@ func handlerValidate (w http.ResponseWriter, r *http.Request){
 	w.Write(dat)
 }
 
+
 func cleanBody(s string) string {
 	r, _ := regexp.Compile(`(?i)(\b)(kerfuffle|sharbert|fornax)(\s)`) 
 	return r.ReplaceAllString(s, "$1****$3")
