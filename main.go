@@ -38,6 +38,9 @@ func main(){
 	mux.HandleFunc("GET /api/healthz", handlerHealthCheck)
 	mux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirp)
 	mux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
+	mux.HandleFunc("GET /api/chirps", apiCfg.handlerGetChirps)
+	mux.HandleFunc("GET /api/chiprs/{chirpID}", apiCfg.handlerGetChirpByID)
+
 	server := http.Server{
 		Addr: ":8080",
 		Handler: mux,
@@ -56,5 +59,3 @@ func handlerHealthCheck(w http.ResponseWriter, r *http.Request){
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(http.StatusText(http.StatusOK)))
 }
-
-
